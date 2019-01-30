@@ -5,11 +5,13 @@ drop database przychodnia;
 
 create table if not exists pacjenci
 ( 
-id 					int primary key AUTO_INCREMENT,
-imie 				VARCHAR(15) NOT NULL,
-nazwisko 			VARCHAR(15) NOT NULL,
-data_ur				date,
-pesel				VARCHAR(15) NOT NULL
+id 						int primary key AUTO_INCREMENT,
+imie 					VARCHAR(15) NOT NULL,
+nazwisko 				VARCHAR(15) NOT NULL,
+data_ur					date,
+pesel					VARCHAR(15) NOT NULL UNIQUE,
+haslo					VARCHAR(15) NOT NULL,
+funkcja					VARCHAR(10) DEFAULT 'pacjent'
 );
 
 create table if not exists lekarze
@@ -17,7 +19,10 @@ create table if not exists lekarze
 id_lek					int primary key AUTO_INCREMENT,
 imie_lek 				VARCHAR(15) NOT NULL,
 nazwisko_lek			VARCHAR(15) NOT NULL,
-specjalizacja			VARCHAR(15) NOT NULL
+specjalizacja			VARCHAR(15) NOT NULL,
+pesel_lek				VARCHAR(15) NOT NULL UNIQUE,
+haslo_lek				VARCHAR(15) NOT NULL,
+funkcja					VARCHAR(10) DEFAULT 'lekarz'
 );
 
 Create table if not exists wizyty
@@ -38,26 +43,25 @@ FOREIGN KEY (nr_wizyty) 		REFERENCES wizyty(nr_wizyty)
 );
 show tables;
 
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Andrzej','Hajczuk', '1953-03-10', 53031058762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Antoni','Domińczak', '1962-08-15', 62081558762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Jan','Falkiewicz', '1969-11-02', 69110258762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Antoni', 'Gielnik', '1988-06-24', 88062458762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Ryszard','Gnacikowska', '1993-01-30', 93013058762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Jan','Bilski', '1975-12-03', 75120358762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Marian','Borowiec', '1981-07-13', 81071358762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Janusz','Basiński', '1999-03-22', 99032258762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Zdzisław','Domżał', '1958-12-17', 58121758762);
-insert into pacjenci (id, imie, nazwisko, data_ur, pesel) values (id,'Andrzej','Jakubowski', '1978-04-18', 78041858762);
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Andrzej','Hajczuk', '1953-03-10', 53031058762, 'lala');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Antoni','Domińczak', '1962-08-15', 62081558762,'qaz');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Jan','Falkiewicz', '1969-11-02', 69110258762,'wsx');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Antoni', 'Gielnik', '1988-06-24', 88062458762,'edc');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Ryszard','Gnacikowska', '1993-01-30', 93013058762,'rfv');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Jan','Bilski', '1975-12-03', 75120358762,'tgb');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Marian','Borowiec', '1981-07-13', 81071358762,'yhn');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Janusz','Basiński', '1999-03-22', 99032258762,'ujm');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Zdzisław','Domżał', '1958-12-17', 58121758762,'iop');
+insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Andrzej','Jakubowski', '1978-04-18', 78041858762,'plk');
 
-
-insert into lekarze values (id_lek,'Jerzy', 'Fejkowski', "chirurg");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Andrzej','Jabłoński', "internista");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Jolanta', 'Gawęcka', "pediatra");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Jolanta', 'Gąsiorek', "kardiolog");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Adam', 'Brzyska', "psycholog");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Anna', 'Chylińska', "anestezjolog");
-insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja) values (id_lek,'Piotr', 'Gradzik', "dermatolog");
-
+select * from pacjenci;
+insert into lekarze values (id_lek,'Jerzy', 'Fejkowski', "chirurg",84112375930,'haslo0',funkcja);
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Andrzej','Jabłoński', "internista",12345678999,'haslo1');
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Jolanta', 'Gawęcka', "pediatra",57042912345,'haslo2');
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Jolanta', 'Gąsiorek', "kardiolog",66021298765,'haslo3');
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Adam', 'Brzyska', "psycholog",76012245637,'haslo4');
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Anna', 'Chylińska', "anestezjolog",82121304678,'haslo5');
+insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Piotr', 'Gradzik', "dermatolog",91093078940,'haslo6');
 
 
 Insert into wizyty (id_pacjenta,id_lekarza, data_wizyty) values (10,2,'15-08-07');
