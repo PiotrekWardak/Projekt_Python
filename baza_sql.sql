@@ -133,6 +133,7 @@ SELECT * from leki_pacjentow;
 Select * from suma_wizyt_pojedynczego_lekarza;
 SELECT * from pacjenci_bez_lekow;
 
+#SELECT nr_wizyty, imie, nazwa_leku, nazwisko, pesel FROM pacjenci_bez_lekow where id_lekarza = 1 and nazwa_leku is NULL;
 
 
 #########################################################################################################################################################################################
