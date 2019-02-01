@@ -14,7 +14,7 @@ class Patient:
         # print("S-show my appointments, M - make a new appointment, D-delete an appointment,
         # C-check prescribed medicine, Q-exit")
         while True:
-            dec = statements.Stat.getinput()
+            dec = statements.Stat.getInputPatient()
             if dec=="S":
                 # print("Weszlo do if")
                 self.select_app()
@@ -31,6 +31,7 @@ class Patient:
                 print("Wrong character. Try again")
 
     def select_app(self):
+        print()
         print("Your appointments: ")
 
         # self.kursor.execute("SELECT * FROM pacjenci where pesel = %s", self.pesel)
@@ -40,21 +41,27 @@ class Patient:
         SPEC = 7
         DOC_NAME = 8
         DOC_SURNAME = 9
+        print()
         for row in pacjenci:
             print(row[DATE_APP], row[SPEC], row[DOC_NAME], row[DOC_SURNAME])
+        print()
 
     def new_app(self):
+        print()
         print("To schedule an appointment,please select a number corresponding to your doctor ")
         self.kursor.execute("SELECT * FROM lekarze")
         pacjenci = self.kursor.fetchall()
         while True:
+            print()
             for row in pacjenci:
                 DR_ID = 0
                 DOC_NAME = 1
                 DOC_SUR = 2
                 SPEC = 3
                 print(row[DR_ID], row[DOC_NAME], row[DOC_SUR], row[SPEC])
+            print()
             dec = input("Type doctor/'s id: ")
+            print()
             if dec.isdigit():
                 if 0 < int(dec) <= len(pacjenci):
                     val = self.make_app(dec, self.id)
@@ -79,6 +86,7 @@ class Patient:
     def make_app(self,dr_id,patient_id):
         self.dr_id = dr_id
         self.patient_id = patient_id
+        print()
         print("Type preferred date of appointment")
         day = input("day: ")
         month = input("month: ")
@@ -103,6 +111,7 @@ class Patient:
                 self.new_app()
 
     def del_app(self):
+        print()
         print("Delete selected appointment ")
         self.kursor.execute("SELECT * FROM szczegoly_wizyty where pesel = %s", self.pesel)
         appointments = self.kursor.fetchall()
@@ -113,10 +122,12 @@ class Patient:
         DOC_SURNAME = 9
         patient_app = set()
         while True:
+            print()
             for row in appointments:
                 print("App number: " + str(row[APP_NUMB]) + "\t Date: " + str(row[DATE_APP]) + "\t Doctor details:  " +
                       str(row[SPEC]) + " " + str(row[DOC_NAME]) + " " + str(row[DOC_SURNAME]))
                 patient_app.add(row[APP_NUMB])
+            print()
             print("Select an appointment to delete and press corresponding number")
             print(patient_app)
             dec = input()
@@ -142,12 +153,15 @@ class Patient:
                     break
 
     def check_medicine(self):
+        print()
         print("Medicine prescribed for you ")
         self.kursor.execute("SELECT * FROM leki_pacjentow where pesel = %s", self.pesel)
         pacjenci = self.kursor.fetchall()
+        print()
         for row in pacjenci:
             SPEC = 3
             DOC_NAME = 4
             DOC_SUR = 5
             MED = 9
             print(row[MED] + " prescribed by " + row[DOC_NAME] + " " + row[DOC_SUR] + " - " + row[SPEC])
+        print()

@@ -19,6 +19,6 @@ class Stat:
         print("Witamy w naszej przychodni!")
 
     @classmethod
-    def getinput(cls):
+    def getInputPatient(cls):
         dec = input("S-show my appointments, M - make a new appointment, D-delete an appointment, C-check prescribed medicine, Q-exit").upper()
         return dec
