@@ -8,7 +8,7 @@ create table if not exists pacjenci
 id 						int primary key AUTO_INCREMENT,
 imie 					VARCHAR(15) NOT NULL,
 nazwisko 				VARCHAR(15) NOT NULL,
-data_ur					date,
+data_ur					date not NULL,
 pesel					VARCHAR(15) NOT NULL UNIQUE,
 haslo					VARCHAR(15) NOT NULL,
 funkcja					VARCHAR(10) DEFAULT 'pacjent'
@@ -117,13 +117,13 @@ Alter table lekarze modify specjalizacja Varchar(15) not null after id_lek;
 #########################################################################################################################################################################################
 Update pacjenci set nazwisko = "Adamski" where id = 2;
 #########################################################################################################################################################################################
-Create VIEW szczegoly_wizyty as SELECT nr_wizyty, data_wizyty, id_pacjenta, pac.imie, pac.nazwisko,id_lekarza, lek.specjalizacja, lek.imie_lek,lek.nazwisko_lek from wizyty as wiz 
+Create VIEW szczegoly_wizyty as SELECT nr_wizyty, data_wizyty, id_pacjenta, pac.imie, pac.pesel, pac.nazwisko,id_lekarza, lek.specjalizacja, lek.imie_lek,lek.nazwisko_lek from wizyty as wiz 
 left JOIN lekarze as lek on wiz.id_lekarza=lek.id_lek left join pacjenci as pac on wiz.id_pacjenta=pac.id ;
 ########
 SELECT * from szczegoly_wizyty;
 #########################################################################################################################################################################################
-CREATE VIEW leki_pacjentow AS SELECT wiz.nr_wizyty,pac.id,pac.imie, pac.nazwisko, prze.nazwa_leku from przepisane_leki as prze 
-left join wizyty as wiz on prze.nr_wizyty=wiz.nr_wizyty left join pacjenci=pac on wiz.id_pacjenta=pac.id;
+CREATE VIEW leki_pacjentow AS SELECT wiz.nr_wizyty,pac.id as 'id_pacjenta', wiz.id_lekarza, lekarze.specjalizacja, lekarze.imie_lek,lekarze.nazwisko_lek,pac.imie, pac.nazwisko, pac.pesel, prze.nazwa_leku from przepisane_leki as prze 
+left join wizyty as wiz on prze.nr_wizyty=wiz.nr_wizyty left join pacjenci=pac on wiz.id_pacjenta=pac.id left join lekarze on wiz.id_lekarza=lekarze.id_lek;
 ########
 SELECT * from leki_pacjentow;
 #########################################################################################################################################################################################
@@ -133,8 +133,12 @@ select count(*) as ilosc_wizyt, lekarze.imie_lek, lekarze.nazwisko_lek, lekarze.
 ########
 Select * from suma_wizyt_pojedynczego_lekarza;
 #########################################################################################################################################################################################
-
-
+SELECT * from szczegoly_wizyty;
+SELECT * from leki_pacjentow;
+Select * from suma_wizyt_pojedynczego_lekarza;
+drop view szczegoly_wizyty;
+drop view leki_pacjentow;
+drop view suma_wizyt_pojedynczego_lekarza;
 
 # ALTER TABLE table_name MODIFY password varchar(20) AFTER id zapytanie do PYTHON
 #chce aby lekarz podawal swoja dostepnosc i wowczas pacjent mogl sie do niego zapisac;
