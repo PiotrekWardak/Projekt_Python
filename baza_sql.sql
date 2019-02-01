@@ -1,6 +1,9 @@
+drop database przychodnia;
+
+
 Create database przychodnia;
 use przychodnia;
-drop database przychodnia;
+
 
 
 create table if not exists pacjenci
@@ -54,7 +57,6 @@ insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Janu
 insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Zdzisław','Domżał', '1958-12-17', 58121758762,'iop');
 insert into pacjenci (id, imie, nazwisko, data_ur, pesel,haslo) values (id,'Andrzej','Jakubowski', '1978-04-18', 78041858762,'plk');
 
-select * from pacjenci;
 insert into lekarze values (id_lek,'Jerzy', 'Fejkowski', "chirurg",84112375930,'haslo0',funkcja);
 insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Andrzej','Jabłoński', "internista",12345678999,'haslo1');
 insert into lekarze (id_lek, imie_lek, nazwisko_lek, specjalizacja,pesel_lek,haslo_lek) values (id_lek,'Jolanta', 'Gawęcka', "pediatra",57042912345,'haslo2');
@@ -108,37 +110,35 @@ Insert into przepisane_leki values (19,'Xyzal');
 Insert into przepisane_leki values (20,'Zyrtec');
 
 
-SELECT * from pacjenci;
-SELECT * from lekarze;
-SELECT * from wizyty;
-SELECT * from przepisane_leki;
-#########################################################################################################################################################################################
-Alter table lekarze modify specjalizacja Varchar(15) not null after id_lek;
-#########################################################################################################################################################################################
-Update pacjenci set nazwisko = "Adamski" where id = 2;
 #########################################################################################################################################################################################
 Create VIEW szczegoly_wizyty as SELECT nr_wizyty, data_wizyty, id_pacjenta, pac.imie, pac.pesel, pac.nazwisko,id_lekarza, lek.specjalizacja, lek.imie_lek,lek.nazwisko_lek from wizyty as wiz 
 left JOIN lekarze as lek on wiz.id_lekarza=lek.id_lek left join pacjenci as pac on wiz.id_pacjenta=pac.id ;
-########
-SELECT * from szczegoly_wizyty;
 #########################################################################################################################################################################################
 CREATE VIEW leki_pacjentow AS SELECT wiz.nr_wizyty,pac.id as 'id_pacjenta', wiz.id_lekarza, lekarze.specjalizacja, lekarze.imie_lek,lekarze.nazwisko_lek,pac.imie, pac.nazwisko, pac.pesel, prze.nazwa_leku from przepisane_leki as prze 
 left join wizyty as wiz on prze.nr_wizyty=wiz.nr_wizyty left join pacjenci=pac on wiz.id_pacjenta=pac.id left join lekarze on wiz.id_lekarza=lekarze.id_lek;
-########
-SELECT * from leki_pacjentow;
 #########################################################################################################################################################################################
 #ilosc wizyt poszczegolnego lekarza
 CREATE View suma_wizyt_pojedynczego_lekarza AS
 select count(*) as ilosc_wizyt, lekarze.imie_lek, lekarze.nazwisko_lek, lekarze.specjalizacja from lekarze right join wizyty on  lekarze.id_lek= wizyty.id_lekarza group by id_lekarza ;
-########
-Select * from suma_wizyt_pojedynczego_lekarza;
 #########################################################################################################################################################################################
+CREATE VIEW pacjenci_bez_lekow AS SELECT wiz.nr_wizyty,pac.id as 'id_pacjenta', wiz.id_lekarza, lekarze.specjalizacja, lekarze.imie_lek,lekarze.nazwisko_lek,pac.imie, pac.nazwisko, pac.pesel, prze.nazwa_leku from przepisane_leki as prze 
+right join wizyty as wiz on prze.nr_wizyty=wiz.nr_wizyty left join pacjenci=pac on wiz.id_pacjenta=pac.id left join lekarze on wiz.id_lekarza=lekarze.id_lek;
+#########################################################################################################################################################################################
+SELECT * from pacjenci;
+SELECT * from lekarze;
+SELECT * from wizyty;
+SELECT * from przepisane_leki;
 SELECT * from szczegoly_wizyty;
 SELECT * from leki_pacjentow;
 Select * from suma_wizyt_pojedynczego_lekarza;
-drop view szczegoly_wizyty;
-drop view leki_pacjentow;
-drop view suma_wizyt_pojedynczego_lekarza;
+SELECT * from pacjenci_bez_lekow;
+
+
+
+#########################################################################################################################################################################################
+#Alter table lekarze modify specjalizacja Varchar(15) not null after id_lek;
+#########################################################################################################################################################################################
+#Update pacjenci set nazwisko = "Adamski" where id = 2;
 
 # ALTER TABLE table_name MODIFY password varchar(20) AFTER id zapytanie do PYTHON
 #chce aby lekarz podawal swoja dostepnosc i wowczas pacjent mogl sie do niego zapisac;

@@ -132,16 +132,20 @@ class Patient:
             print(patient_app)
             dec = input()
             if dec.isdigit() and (int(dec) in patient_app):
-                self.kursor.execute("DELETE FROM wizyty WHERE id_pacjenta = %s and nr_wizyty = %s", (self.id,dec))
-                dec = input("Are you sure to delete this appointment Y/N").upper()
+                try:
+                    self.kursor.execute("DELETE FROM wizyty WHERE id_pacjenta = %s and nr_wizyty = %s", (self.id,dec))
+                    dec = input("Are you sure to delete this appointment Y/N").upper()
 
-                if (dec == 'Y'):
-                    self.polaczenie.commit()
-                    print("Appointment canceled")
-                    break
-                else:
-                    self.polaczenie.rollback()
-                    print("No change in your appointments")
+                    if (dec == 'Y'):
+                        self.polaczenie.commit()
+                        print("Appointment canceled")
+                        break
+                    else:
+                        self.polaczenie.rollback()
+                        print("No change in your appointments")
+                        break
+                except:
+                    print("Selected appointment can not be deleted. It has already took place and the doctor prescribed medicine\n")
                     break
             else:
                 print("Wrong number entered. Press ENTER to exit to main menu or press T to Try again")

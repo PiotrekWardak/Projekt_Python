@@ -1,5 +1,6 @@
-import logowanie
+import login
 import statements
 
 statements.Stat.welcome_message()
-DBConnect = logowanie.Baza()
+DBConnect = login.Base()
+statements.Stat.goodbye_message()
