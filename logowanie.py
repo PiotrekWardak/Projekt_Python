@@ -10,13 +10,13 @@ class Baza:
             statements.Stat.getConnectionMessage()
             self.logowanie()
         except:
-            print ("Błąd. Połączenie z bazą nie powiodło się.")
+            print ("Error. Connection with database failed.")
     def logowanie(self):
         statements.Stat.log_in()
         funkcja = input().upper()
 
         if funkcja == 'L':
-            print('Logowanie do panelu lekarza')
+            print('Logging to doctor\'s account')
             pesel = input("podaj pesel")
             haslo = input("podaj haslo")
             self.kursor = self.polaczenie.cursor()
@@ -31,22 +31,22 @@ class Baza:
                 self.logowanie()
 
         elif funkcja=='P':
-            print('Logowanie do panelu pacjenta')
+            print('Logging to patient account')
             pesel = input("podaj pesel")
             haslo = input("podaj haslo")
             self.kursor = self.polaczenie.cursor()
             self.kursor.execute("Select * from pacjenci where pesel = %s and haslo = %s", (pesel, haslo))
             results_pacjenci = self.kursor.fetchall()
             if (len(results_pacjenci) == 1):
-                print("Logowanie zakonczylo sie sukcesem")
+                print("Login Succeeded")
 
-                patient.Pacjent(pesel,self.kursor, self.polaczenie)
-                print("Zakonczenie logowania")
+                patient.Patient(pesel, self.kursor, self.polaczenie)
+                print("Program closed")
             else:
                 print("niepoprawny login lub haslo")
                 self.logowanie()
         elif funkcja == 'X':
-            print("Wyszedłeś z programu")
+            print("Program closed")
 
         else:
             print("Wprowadzone dane nie istnieją. Spróbuj ponownie")

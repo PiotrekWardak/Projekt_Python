@@ -1,8 +1,7 @@
 import statements
-import pymysql
 
 
-class Pacjent:
+class Patient:
     def __init__(self,pesel,kursor,polaczenie):
         self.pesel=pesel
         self.polaczenie=polaczenie
@@ -11,14 +10,14 @@ class Pacjent:
         self.choice()
 
     def choice(self):
-        print("to jest pacjent w srodku")
-        # print("S-show my appointments, M - make a new appointment, D-delete an appointment, C-check prescribed medicine, Q-exit")
+        # print("to jest pacjent w srodku")
+        # print("S-show my appointments, M - make a new appointment, D-delete an appointment,
+        # C-check prescribed medicine, Q-exit")
         while True:
             dec = statements.Stat.getinput()
             if dec=="S":
                 # print("Weszlo do if")
                 self.select_app()
-                print("zakonczenie S")
             elif dec=='M':
                 self.new_app()
             elif dec=='D':
@@ -26,12 +25,10 @@ class Pacjent:
             elif dec=='C':
                 self.check_medicine()
             elif dec=="Q":
-                print("Program is closed")
+                print("Login finished")
                 break
             else:
                 print("Wrong character. Try again")
-
-
 
     def select_app(self):
         print("Your appointments: ")
@@ -49,18 +46,14 @@ class Pacjent:
     def new_app(self):
         print("To schedule an appointment,please select a number corresponding to your doctor ")
         self.kursor.execute("SELECT * FROM lekarze")
-
-        # id_lek, imie_lek, nazwisko_lek, specjalizacja
-
         pacjenci = self.kursor.fetchall()
-        # print(pacjenci[0][0:3])
-        for row in pacjenci:
-            DR_ID = 0
-            DOC_NAME = 1
-            DOC_SUR = 2
-            SPEC = 3
-            print(row[DR_ID], row[DOC_NAME], row[DOC_SUR], row[SPEC])
         while True:
+            for row in pacjenci:
+                DR_ID = 0
+                DOC_NAME = 1
+                DOC_SUR = 2
+                SPEC = 3
+                print(row[DR_ID], row[DOC_NAME], row[DOC_SUR], row[SPEC])
             dec = input("Type doctor/'s id: ")
             if dec.isdigit():
                 if 0 < int(dec) <= len(pacjenci):
@@ -73,17 +66,15 @@ class Pacjent:
                         break
                 else:
                     print("Number which you entered is out of range. Try again.")
-                    self.new_app()
+                    continue
             else:
-                print("Wrong character entered. Press any character to try again or press q to exit to main manu")
+                print("Wrong character entered. Press ENTER to exit to main menu or press T to Try again")
+                zm = 0
                 zm = input().upper()
-                if zm == 'Q':
-                    break
+                if zm == 'T':
+                    continue
                 else:
-                    self.new_app()
-
-
-
+                    break
 
     def make_app(self,dr_id,patient_id):
         self.dr_id = dr_id
@@ -107,17 +98,48 @@ class Pacjent:
             print("Wrong date entered. Press any character to try again or press q to exit to main manu")
             dec = input().upper()
             if dec == 'Q':
-                return 0;
+                return 0
             else:
                 self.new_app()
 
-
-
-
-
-
     def del_app(self):
         print("Delete selected appointment ")
+        self.kursor.execute("SELECT * FROM szczegoly_wizyty where pesel = %s", self.pesel)
+        appointments = self.kursor.fetchall()
+        APP_NUMB = 0
+        DATE_APP = 1
+        SPEC = 7
+        DOC_NAME = 8
+        DOC_SURNAME = 9
+        patient_app = set()
+        while True:
+            for row in appointments:
+                print("App number: " + str(row[APP_NUMB]) + "\t Date: " + str(row[DATE_APP]) + "\t Doctor details:  " +
+                      str(row[SPEC]) + " " + str(row[DOC_NAME]) + " " + str(row[DOC_SURNAME]))
+                patient_app.add(row[APP_NUMB])
+            print("Select an appointment to delete and press corresponding number")
+            print(patient_app)
+            dec = input()
+            if dec.isdigit() and (int(dec) in patient_app):
+                self.kursor.execute("DELETE FROM wizyty WHERE id_pacjenta = %s and nr_wizyty = %s", (self.id,dec))
+                dec = input("Are you sure to delete this appointment Y/N").upper()
+
+                if (dec == 'Y'):
+                    self.polaczenie.commit()
+                    print("Appointment canceled")
+                    break
+                else:
+                    self.polaczenie.rollback()
+                    print("No change in your appointments")
+                    break
+            else:
+                print("Wrong number entered. Press ENTER to exit to main menu or press T to Try again")
+                zm = 0
+                zm = input().upper()
+                if zm == 'T':
+                    continue
+                else:
+                    break
 
     def check_medicine(self):
         print("Medicine prescribed for you ")
